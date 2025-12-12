@@ -1,0 +1,118 @@
+<section class="hud-panel w-full max-w-lg p-0 overflow-hidden relative animate-fade-in">
+  <div
+    class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-[#bc13fe]/10 blur-[60px] pointer-events-none"
+  ></div>
+
+  <div class="p-8 relative z-10">
+    <div class="text-center mb-8">
+      <div class="inline-flex gap-2 mb-3 justify-center">
+        <span
+          class="px-2 py-0.5 rounded bg-white/10 text-[10px] font-bold text-[#00f3ff] border border-[#00f3ff]/30 uppercase tracking-wide"
+          >{{ requestData.platform }}</span
+        >
+        <span
+          class="px-2 py-0.5 rounded bg-[#bc13fe]/20 text-[10px] font-bold text-white border border-[#bc13fe]/30 uppercase tracking-wide"
+          >{{ requestData.region }}</span
+        >
+      </div>
+      <h2 class="text-3xl font-black text-white leading-tight mb-1">{{ requestData.title }}</h2>
+      <p class="text-xs text-slate-400 font-medium">
+        Estado: <span class="text-white">{{ requestData.condition }}</span>
+      </p>
+    </div>
+
+    <div class="text-center py-2 mb-6">
+      <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] mb-3 font-mono">
+        Valor de Mercado Estimado
+      </p>
+      <span class="text-6xl font-black text-white drop-shadow-[0_0_25px_rgba(188,19,254,0.5)]">
+        {{ result.price_median | number : '1.2-2' }}€
+      </span>
+
+      @if (result.trend) {
+      <div class="mt-4 flex justify-center">
+        <span
+          [ngClass]="{
+            'bg-emerald-500/10 text-emerald-400 border-emerald-500/30':
+              result.trend === 'stable' || result.trend === 'going_up',
+            'bg-red-500/10 text-red-400 border-red-500/30': result.trend === 'going_down'
+          }"
+          class="px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border backdrop-blur-md flex items-center gap-2 shadow-lg shadow-black/20"
+        >
+          <i
+            class="fa-solid"
+            [ngClass]="{
+              'fa-arrow-trend-up': result.trend === 'going_up',
+              'fa-minus': result.trend === 'stable',
+              'fa-arrow-trend-down': result.trend === 'going_down'
+            }"
+          ></i>
+          {{
+            result.trend === 'going_up'
+              ? 'Tendencia al Alza'
+              : result.trend === 'going_down'
+              ? 'Tendencia a la Baja'
+              : 'Tendencia Estable'
+          }}
+        </span>
+      </div>
+      }
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 my-8 font-mono text-xs">
+      <div
+        class="text-center p-4 rounded-xl bg-black/40 border border-white/5 flex flex-col justify-center"
+      >
+        <span class="block text-slate-500 mb-1 text-[10px] uppercase">Mínimo</span>
+        <span class="text-lg font-bold text-slate-300"
+          >{{ result.price_low | number : '1.0-0' }}€</span
+        >
+      </div>
+      <div
+        class="text-center p-4 rounded-xl bg-[#bc13fe]/10 border border-[#bc13fe]/30 relative overflow-hidden flex flex-col justify-center"
+      >
+        <div class="absolute inset-0 bg-[#bc13fe]/5 animate-pulse"></div>
+        <span class="block text-[#bc13fe] mb-1 text-[10px] uppercase font-bold relative z-10"
+          >Media</span
+        >
+        <span class="text-xl font-bold text-white relative z-10"
+          >{{ result.price_median | number : '1.0-0' }}€</span
+        >
+      </div>
+      <div
+        class="text-center p-4 rounded-xl bg-black/40 border border-white/5 flex flex-col justify-center"
+      >
+        <span class="block text-slate-500 mb-1 text-[10px] uppercase">Máximo</span>
+        <span class="text-lg font-bold text-slate-300"
+          >{{ result.price_high | number : '1.0-0' }}€</span
+        >
+      </div>
+    </div>
+
+    <div class="bg-black/40 rounded-xl p-5 border border-white/10 mb-6">
+      <div class="flex items-center gap-2 mb-2">
+        <i class="fa-brands fa-ebay text-blue-400"></i>
+        <p class="text-xs font-bold text-slate-200">Fuente: {{ result.source_data.name }}</p>
+      </div>
+      <p class="text-[10px] text-slate-500 leading-relaxed">{{ result.explanation }}</p>
+    </div>
+
+    <div class="flex gap-3">
+      <button
+        (click)="onReset()"
+        class="flex-1 cursor-pointer py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-bold border border-white/10 transition-colors uppercase tracking-wide"
+      >
+        Escanear otro
+      </button>
+      <a
+        href="https://www.ebay.es/sch/i.html?_nkw={{ requestData.title }}+{{
+          requestData.platform
+        }}+{{ requestData.region }}&LH_Sold=1"
+        target="_blank"
+        class="flex-1 cursor-pointer py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center gap-2 border-b-4 border-blue-800 hover:border-blue-700 transition-all uppercase tracking-wide shadow-lg shadow-blue-900/20"
+      >
+        Ver en eBay
+      </a>
+    </div>
+  </div>
+</section>

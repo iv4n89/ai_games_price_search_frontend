@@ -1,308 +1,44 @@
-<!-- LAYER 1: Particle Canvas (Animated Background) -->
-<canvas #bgCanvas class="fixed inset-0 w-full h-full pointer-events-none -z-10 bg-[#050505]"></canvas>
+<app-particle-bg></app-particle-bg>
 
-<!-- LAYER 2: Vignette (Edge Darkening) -->
-<div class="fixed inset-0 pointer-events-none -z-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_50%,rgba(0,0,0,0.8)_100%)]"></div>
+<div
+  class="fixed inset-0 pointer-events-none -z-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_50%,rgba(0,0,0,0.8)_100%)]"
+></div>
 
-<!-- LAYER 3: Main Content -->
-<main class="min-h-screen flex flex-col items-center justify-center p-4 font-sans text-slate-200 relative overflow-hidden z-10">
-
-  <!-- HEADER -->
+<main
+  class="min-h-screen flex flex-col items-center justify-center p-4 font-sans text-slate-200 relative overflow-hidden z-10"
+>
   <header class="text-center mb-10 animate-fade-in relative z-20">
     <div class="inline-flex items-center justify-center mb-4 relative">
-      <div class="absolute inset-0 bg-[#bc13fe] blur-2xl opacity-30 rounded-full transform scale-150"></div>
+      <div
+        class="absolute inset-0 bg-[#bc13fe] blur-2xl opacity-30 rounded-full transform scale-150"
+      ></div>
       <i class="fa-solid fa-ghost text-5xl text-white relative z-10 drop-shadow-lg"></i>
     </div>
-    
+
     <h1 class="text-4xl font-black text-white tracking-tight text-shadow-neon mb-3">
       RETRO<span class="text-[#bc13fe]">SCAN</span> AI
     </h1>
-    
+
     <div class="flex justify-center items-center gap-3 opacity-60">
-        <div class="h-[1px] w-8 bg-gradient-to-r from-transparent to-white/50"></div>
-        <p class="text-[10px] font-mono uppercase tracking-[0.3em] text-slate-300">Tasación Inteligente</p>
-        <div class="h-[1px] w-8 bg-gradient-to-l from-transparent to-white/50"></div>
+      <div class="h-[1px] w-8 bg-linear-to-r from-transparent to-white/50"></div>
+      <p class="text-[10px] font-mono uppercase tracking-[0.3em] text-slate-300">
+        Tasación Inteligente
+      </p>
+      <div class="h-[1px] w-8 bg-linear-to-l from-transparent to-white/50"></div>
     </div>
   </header>
 
-  <!-- VIEW 1: UPLOAD -->
   @if (step === 'upload') {
-  <section class="hud-panel w-full max-w-lg p-1 animate-fade-in group">
-    <input type="file" #fileInput (change)="onFileSelected($event)" class="hidden" accept="image/*">
-    
-    <div class="relative bg-[#0a0a12]/50 m-1 rounded-xl border-2 border-dashed border-white/10 hover:border-[#bc13fe]/50 hover:bg-[#bc13fe]/5 transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(188,19,254,0.1)]">
-        <label (click)="fileInput.click()" class="cursor-pointer block py-20 px-8 text-center">
-          
-          <div class="w-20 h-20 bg-[#13131f] rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 shadow-xl shadow-black/50 group-hover:scale-110 transition-transform duration-300 relative overflow-hidden">
-            <div class="absolute inset-0 bg-[#bc13fe] opacity-0 group-hover:opacity-10 transition-opacity"></div>
-            <i class="fa-solid fa-camera text-3xl text-[#bc13fe]"></i>
-          </div>
-          
-          <h2 class="text-xl font-bold text-white mb-2">Subir Foto</h2>
-          <p class="text-slate-400 text-sm font-medium">Carátula, disco o cartucho</p>
-        </label>
-    </div>
-  </section>
-  }
-
-  <!-- VIEW 2: SCANNING (Loading) -->
-  @if (step === 'scanning') {
-  <section class="hud-panel w-full max-w-lg p-1 animate-fade-in">
-    <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-white/10">
-      <img [src]="previewImage" *ngIf="previewImage" class="w-full h-full object-cover opacity-60">
-      
-      <div class="absolute inset-0 w-full h-[2px] bg-[#00f3ff] shadow-[0_0_25px_#00f3ff] animate-scan-line z-20"></div>
-      
-      <div class="absolute inset-0 flex flex-col items-center justify-center z-30">
-          <div class="bg-black/80 backdrop-blur px-5 py-2 rounded-full border border-[#00f3ff]/30 text-[#00f3ff] text-xs font-mono tracking-widest animate-pulse shadow-[0_0_15px_rgba(0,243,255,0.2)]">
-            <i class="fa-solid fa-microchip mr-2"></i> {{ scanningMessage }}
-          </div>
-      </div>
-      
-      <div class="absolute top-4 left-4 w-4 h-4 border-l-2 border-t-2 border-white/20"></div>
-      <div class="absolute top-4 right-4 w-4 h-4 border-r-2 border-t-2 border-white/20"></div>
-      <div class="absolute bottom-4 left-4 w-4 h-4 border-l-2 border-b-2 border-white/20"></div>
-      <div class="absolute bottom-4 right-4 w-4 h-4 border-r-2 border-b-2 border-white/20"></div>
-    </div>
-  </section>
-  }
-
-  <!-- VIEW 3: SELECTION (Multiple Games) -->
-  @if (step === 'selection') {
-  <section class="hud-panel w-full max-w-lg p-6 border-t-2 border-yellow-500/50 animate-fade-in">
-    <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-3">
-      <div class="w-8 h-8 rounded bg-yellow-500/20 flex items-center justify-center text-yellow-500 border border-yellow-500/30">
-         <i class="fa-solid fa-layer-group text-sm"></i>
-      </div>
-      Múltiples Juegos
-    </h2>
-    <p class="text-xs text-slate-400 mb-6 ml-1">La IA ha detectado varios títulos. Selecciona cuál quieres tasar.</p>
-    
-    <div class="space-y-3">
-      @for (candidate of candidates; track candidate) {
-      <button (click)="selectCandidate(candidate)"
-              class="w-full text-left p-4 rounded-xl bg-white/5 hover:bg-[#bc13fe]/20 border border-white/10 hover:border-[#bc13fe] transition-all flex justify-between items-center group">
-        <div class="flex flex-col">
-            <span class="font-bold text-white text-sm group-hover:text-[#bc13fe] transition-colors">{{ candidate.title }}</span>
-            <div class="flex gap-2 mt-1">
-                <span class="text-[10px] text-[#00f3ff] px-1.5 py-0.5 bg-[#00f3ff]/10 rounded border border-[#00f3ff]/20 uppercase">{{ candidate.platform }}</span>
-                <span class="text-[10px] text-slate-400 px-1.5 py-0.5 bg-white/5 rounded border border-white/10 uppercase">{{ candidate.condition_guess }}</span>
-            </div>
-        </div>
-        <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-[#bc13fe] transition-colors"></i>
-      </button>
-      }
-    </div>
-    <button (click)="reset()" class="w-full mt-6 py-3 text-xs font-bold text-slate-500 hover:text-white transition-colors uppercase tracking-wide">Cancelar Operación</button>
-  </section>
-  }
-
-  <!-- VIEW 4: VERIFY (Form) -->
-  @if (step === 'verify') {
-  <section class="hud-panel w-full max-w-lg p-8 border-t-2 border-[#bc13fe]/50 animate-fade-in">
-    <div class="flex items-center justify-between mb-8">
-      <h2 class="text-lg font-bold text-white flex items-center gap-3">
-        <span class="w-8 h-8 rounded bg-[#bc13fe]/20 flex items-center justify-center text-[#bc13fe] border border-[#bc13fe]/30">
-            <i class="fa-solid fa-sliders text-sm"></i>
-        </span>
-        Verificar Datos
-      </h2>
-      <span class="text-[10px] font-mono text-slate-500 bg-white/5 px-2 py-1 rounded">PASO 2/3</span>
-    </div>
-
-    <div class="space-y-6">
-      <div>
-        <label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2 block font-mono">Título del Juego</label>
-        <div class="relative group">
-             <input [(ngModel)]="formData.title" type="text" class="w-full p-4 pl-11 rounded-xl bg-black/40 border border-white/10 text-white font-bold focus:border-[#bc13fe] focus:bg-black/60 focus:outline-none transition-all placeholder:text-slate-600">
-             <i class="fa-solid fa-gamepad absolute left-4 top-4.5 text-slate-500 group-focus-within:text-[#bc13fe] transition-colors"></i>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2 block font-mono">Plataforma</label>
-            <input [(ngModel)]="formData.platform" type="text" class="w-full p-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm font-semibold focus:border-[#bc13fe] focus:outline-none transition-all">
-          </div>
-          <div>
-            <label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2 block font-mono">Condición</label>
-            <div class="relative">
-                <select [(ngModel)]="formData.condition" class="w-full p-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm font-semibold focus:border-[#bc13fe] outline-none appearance-none cursor-pointer">
-                <option value="LOOSE">Solo Cartucho (Loose)</option>
-                <option value="CIB">Completo (CIB)</option>
-                <option value="SEALED">Precintado / Nuevo</option>
-                </select>
-                <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-xs text-slate-500 pointer-events-none"></i>
-            </div>
-          </div>
-      </div>
-
-      <!-- Region Selector (CRITICAL) -->
-      <div class="pt-4 border-t border-white/5">
-        <label class="text-[10px] text-yellow-500 uppercase font-bold tracking-widest mb-3 block font-mono flex justify-between">
-            Región / Edición 
-            <span class="text-[9px] font-normal normal-case opacity-70"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Vital para el precio</span>
-        </label>
-        <div class="grid grid-cols-2 gap-3">
-          <div (click)="formData.region = 'PAL ESP'" 
-                [class.ring-1]="formData.region === 'PAL ESP'"
-                [class.ring-[#bc13fe]]="formData.region === 'PAL ESP'"
-                [class.bg-[#bc13fe]/10]="formData.region === 'PAL ESP'"
-                [class.border-[#bc13fe]/30]="formData.region === 'PAL ESP'"
-                [class.border-white/10]="formData.region !== 'PAL ESP'"
-                [class.opacity-100]="formData.region === 'PAL ESP'"
-                [class.opacity-70]="formData.region !== 'PAL ESP'"
-                class="cursor-pointer border p-3 rounded-xl hover:bg-[#bc13fe]/20 transition-all relative overflow-hidden group hover:opacity-100">
-              <div class="flex items-center gap-3">
-                  <span class="text-xl" [class.grayscale]="formData.region !== 'PAL ESP'">🇪🇸</span>
-                  <div>
-                      <span class="block font-bold text-sm" [class.text-white]="formData.region === 'PAL ESP'" [class.text-slate-300]="formData.region !== 'PAL ESP'">PAL ESP</span>
-                      <span class="text-[10px]" [class.text-[#bc13fe]/80]="formData.region === 'PAL ESP'" [class.text-slate-500]="formData.region !== 'PAL ESP'">España</span>
-                  </div>
-              </div>
-              <i *ngIf="formData.region === 'PAL ESP'" class="fa-solid fa-circle-check absolute right-2 top-2 text-[#bc13fe] text-xs"></i>
-          </div>
-          
-          <div (click)="formData.region = 'PAL EUR'" 
-                [class.ring-1]="formData.region === 'PAL EUR'"
-                [class.ring-[#bc13fe]]="formData.region === 'PAL EUR'"
-                [class.bg-[#bc13fe]/10]="formData.region === 'PAL EUR'"
-                [class.border-[#bc13fe]/30]="formData.region === 'PAL EUR'"
-                [class.border-white/10]="formData.region !== 'PAL EUR'"
-                [class.opacity-100]="formData.region === 'PAL EUR'"
-                [class.opacity-70]="formData.region !== 'PAL EUR'"
-                class="cursor-pointer border p-3 rounded-xl hover:bg-[#bc13fe]/20 transition-all relative overflow-hidden group hover:opacity-100">
-               <div class="flex items-center gap-3">
-                  <span class="text-xl" [class.grayscale]="formData.region !== 'PAL EUR'">🇪🇺</span>
-                  <div>
-                      <span class="block font-bold text-sm" [class.text-white]="formData.region === 'PAL EUR'" [class.text-slate-300]="formData.region !== 'PAL EUR'">PAL EUR</span>
-                      <span class="text-[10px]" [class.text-[#bc13fe]/80]="formData.region === 'PAL EUR'" [class.text-slate-500]="formData.region !== 'PAL EUR'">Genérico</span>
-                  </div>
-              </div>
-              <i *ngIf="formData.region === 'PAL EUR'" class="fa-solid fa-circle-check absolute right-2 top-2 text-[#bc13fe] text-xs"></i>
-          </div>
-
-          <div (click)="formData.region = 'NTSC U'" 
-                [class.ring-1]="formData.region === 'NTSC U'"
-                [class.ring-[#bc13fe]]="formData.region === 'NTSC U'"
-                [class.bg-[#bc13fe]/10]="formData.region === 'NTSC U'"
-                [class.border-[#bc13fe]/30]="formData.region === 'NTSC U'"
-                [class.border-white/10]="formData.region !== 'NTSC U'"
-                [class.opacity-100]="formData.region === 'NTSC U'"
-                [class.opacity-70]="formData.region !== 'NTSC U'"
-                class="cursor-pointer border p-3 rounded-xl hover:bg-[#bc13fe]/20 transition-all relative overflow-hidden group hover:opacity-100">
-              <div class="flex items-center gap-3">
-                  <span class="text-xl" [class.grayscale]="formData.region !== 'NTSC U'">🇺🇸</span>
-                  <div>
-                      <span class="block font-bold text-sm" [class.text-white]="formData.region === 'NTSC U'" [class.text-slate-300]="formData.region !== 'NTSC U'">NTSC U</span>
-                      <span class="text-[10px]" [class.text-[#bc13fe]/80]="formData.region === 'NTSC U'" [class.text-slate-500]="formData.region !== 'NTSC U'">USA</span>
-                  </div>
-              </div>
-              <i *ngIf="formData.region === 'NTSC U'" class="fa-solid fa-circle-check absolute right-2 top-2 text-[#bc13fe] text-xs"></i>
-          </div>
-          
-           <div (click)="formData.region = 'NTSC J'" 
-                [class.ring-1]="formData.region === 'NTSC J'"
-                [class.ring-[#bc13fe]]="formData.region === 'NTSC J'"
-                [class.bg-[#bc13fe]/10]="formData.region === 'NTSC J'"
-                [class.border-[#bc13fe]/30]="formData.region === 'NTSC J'"
-                [class.border-white/10]="formData.region !== 'NTSC J'"
-                [class.opacity-100]="formData.region === 'NTSC J'"
-                [class.opacity-70]="formData.region !== 'NTSC J'"
-                class="cursor-pointer border p-3 rounded-xl hover:bg-[#bc13fe]/20 transition-all relative overflow-hidden group hover:opacity-100">
-              <div class="flex items-center gap-3">
-                  <span class="text-xl" [class.grayscale]="formData.region !== 'NTSC J'">🇯🇵</span>
-                  <div>
-                      <span class="block font-bold text-sm" [class.text-white]="formData.region === 'NTSC J'" [class.text-slate-300]="formData.region !== 'NTSC J'">NTSC J</span>
-                      <span class="text-[10px]" [class.text-[#bc13fe]/80]="formData.region === 'NTSC J'" [class.text-slate-500]="formData.region !== 'NTSC J'">Japón</span>
-                  </div>
-              </div>
-              <i *ngIf="formData.region === 'NTSC J'" class="fa-solid fa-circle-check absolute right-2 top-2 text-[#bc13fe] text-xs"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <button (click)="submitForAppraisal()" [disabled]="isLoading" class="w-full mt-8 py-4 rounded-xl bg-[#bc13fe] hover:bg-[#a00add] text-white font-bold tracking-wider shadow-lg shadow-[#bc13fe]/20 transition-all disabled:opacity-50 flex justify-center items-center gap-3 group relative overflow-hidden">
-        <span class="relative z-10 flex items-center gap-2">
-            <i *ngIf="isLoading" class="fa-solid fa-circle-notch fa-spin"></i>
-            <span *ngIf="!isLoading">CONFIRMAR Y TASAR</span>
-            <i *ngIf="!isLoading" class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-        </span>
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1s_infinite]"></div>
-    </button>
-  </section>
-  }
-
-  <!-- VIEW 5: RESULT -->
-  @if (step === 'result' && resultData) {
-  <section class="hud-panel w-full max-w-lg p-0 overflow-hidden relative animate-fade-in">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-[#bc13fe]/10 blur-[60px] pointer-events-none"></div>
-
-      <div class="p-8 relative z-10">
-        <div class="text-center mb-8">
-            <div class="inline-flex gap-2 mb-3 justify-center">
-              <span class="px-2 py-0.5 rounded bg-white/10 text-[10px] font-bold text-[#00f3ff] border border-[#00f3ff]/30 uppercase tracking-wide">{{ formData.platform }}</span>
-              <span class="px-2 py-0.5 rounded bg-[#bc13fe]/20 text-[10px] font-bold text-white border border-[#bc13fe]/30 uppercase tracking-wide">{{ formData.region }}</span>
-            </div>
-            <h2 class="text-3xl font-black text-white leading-tight mb-1">{{ formData.title }}</h2>
-            <p class="text-xs text-slate-400 font-medium">Estado: <span class="text-white">{{ formData.condition }}</span></p>
-        </div>
-
-        <div class="text-center py-2 mb-6">
-            <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] mb-3 font-mono">Valor de Mercado Estimado</p>
-            <span class="text-6xl font-black text-white drop-shadow-[0_0_25px_rgba(188,19,254,0.5)]">
-                {{ resultData.price_median | number:'1.2-2' }}€
-            </span>
-            
-            <div *ngIf="resultData.trend" class="mt-4 flex justify-center">
-                <span [ngClass]="{
-                    'bg-emerald-500/10 text-emerald-400 border-emerald-500/30': resultData.trend === 'stable' || resultData.trend === 'going_up',
-                    'bg-red-500/10 text-red-400 border-red-500/30': resultData.trend === 'going_down'
-                }" class="px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border backdrop-blur-md flex items-center gap-2 shadow-lg shadow-black/20">
-                    <i class="fa-solid" [ngClass]="{
-                        'fa-arrow-trend-up': resultData.trend === 'going_up',
-                        'fa-minus': resultData.trend === 'stable',
-                        'fa-arrow-trend-down': resultData.trend === 'going_down'
-                    }"></i>
-                    {{ resultData.trend === 'going_up' ? 'Tendencia al Alza' : (resultData.trend === 'going_down' ? 'Tendencia a la Baja' : 'Tendencia Estable') }}
-                </span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-3 my-8 font-mono text-xs">
-            <div class="text-center p-4 rounded-xl bg-black/40 border border-white/5 flex flex-col justify-center">
-              <span class="block text-slate-500 mb-1 text-[10px] uppercase">Mínimo</span>
-              <span class="text-lg font-bold text-slate-300">{{ resultData.price_low | number:'1.0-0' }}€</span>
-            </div>
-            <div class="text-center p-4 rounded-xl bg-[#bc13fe]/10 border border-[#bc13fe]/30 relative overflow-hidden flex flex-col justify-center">
-              <div class="absolute inset-0 bg-[#bc13fe]/5 animate-pulse"></div>
-              <span class="block text-[#bc13fe] mb-1 text-[10px] uppercase font-bold relative z-10">Media</span>
-              <span class="text-xl font-bold text-white relative z-10">{{ resultData.price_median | number:'1.0-0' }}€</span>
-            </div>
-            <div class="text-center p-4 rounded-xl bg-black/40 border border-white/5 flex flex-col justify-center">
-              <span class="block text-slate-500 mb-1 text-[10px] uppercase">Máximo</span>
-              <span class="text-lg font-bold text-slate-300">{{ resultData.price_high | number:'1.0-0' }}€</span>
-            </div>
-        </div>
-
-        <div class="bg-black/40 rounded-xl p-5 border border-white/10 mb-6">
-            <div class="flex items-center gap-2 mb-2">
-                <i class="fa-brands fa-ebay text-blue-400"></i>
-                <p class="text-xs font-bold text-slate-200">Fuente: {{ resultData.source_data.name }}</p>
-            </div>
-            <p class="text-[10px] text-slate-500 leading-relaxed">{{ resultData.explanation }}</p>
-        </div>
-
-        <div class="flex gap-3">
-            <button (click)="reset()" class="flex-1 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-bold border border-white/10 transition-colors uppercase tracking-wide">
-              Escanear otro
-            </button>
-            <a href="https://www.ebay.es/sch/i.html?_nkw={{formData.title}}+{{formData.platform}}+{{formData.region}}&LH_Sold=1" target="_blank" class="flex-1 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center gap-2 border-b-4 border-blue-800 hover:border-blue-700 transition-all uppercase tracking-wide shadow-lg shadow-blue-900/20">
-              Ver en eBay
-            </a>
-        </div>
-      </div>
-  </section>
+  <app-upload (fileSelected)="onFileSelected($event)"></app-upload>
+  } @if (step === 'scanning') {
+  <app-scanning [message]="scanningMessage" [image]="previewImage"> </app-scanning>
+  } @if (step === 'selection') {
+  <app-selection [candidates]="candidates" (select)="selectCandidate($event)" (cancel)="reset()">
+  </app-selection>
+  } @if (step === 'verify') {
+  <app-verify [formData]="formData" [isLoading]="isLoading" (submitForm)="submitForAppraisal()">
+  </app-verify>
+  } @if (step === 'result' && resultData) {
+  <app-result [result]="resultData" [requestData]="formData" (reset)="reset()"> </app-result>
   }
 </main>
