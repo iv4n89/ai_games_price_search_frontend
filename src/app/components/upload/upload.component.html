@@ -2,6 +2,11 @@
   <input type="file" #fileInput (change)="onFileChange($event)" class="hidden" accept="image/*" />
 
   <div
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    [class.border-[#bc13fe]]="isDragging"
+    [class.bg-[#bc13fe]/10]="isDragging"
     class="relative bg-[#0a0a12]/50 m-1 rounded-xl border-2 border-dashed border-white/10 hover:border-[#bc13fe]/50 hover:bg-[#bc13fe]/5 transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(188,19,254,0.1)]"
   >
     <label (click)="fileInput.click()" class="cursor-pointer block py-20 px-8 text-center">
@@ -15,7 +20,7 @@
       </div>
 
       <h2 class="text-xl font-bold text-white mb-2">Subir Foto</h2>
-      <p class="text-slate-400 text-sm font-medium">Carátula, disco o cartucho</p>
+      <p class="text-slate-400 text-sm font-medium">Arrastra o haz clic para subir</p>
     </label>
   </div>
 </section>
