@@ -35,7 +35,7 @@ class Particle {
   standalone: true,
   imports: [CommonModule],
   template: `
-    <canvas #bgCanvas class="fixed inset-0 w-full h-full pointer-events-none -z-10 bg-[#050505]"></canvas>
+    <canvas #bgCanvas class="fixed inset-0 w-full h-full pointer-events-none bg-[#050505]"></canvas>
   `,
   styles: [`
     :host {
