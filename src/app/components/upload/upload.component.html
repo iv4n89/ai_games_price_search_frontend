@@ -1,5 +1,6 @@
 <section class="hud-panel w-full max-w-lg p-1 animate-fade-in group">
   <input type="file" #fileInput (change)="onFileChange($event)" class="hidden" accept="image/*" />
+  <input type="file" #cameraInput (change)="onFileChange($event)" class="hidden" accept="image/*" capture="environment" />
 
   <div
     (dragover)="onDragOver($event)"
@@ -9,18 +10,34 @@
     [class.bg-[#bc13fe]/10]="isDragging"
     class="relative bg-[#0a0a12]/50 m-1 rounded-xl border-2 border-dashed border-white/10 hover:border-[#bc13fe]/50 hover:bg-[#bc13fe]/5 transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(188,19,254,0.1)]"
   >
-    <label (click)="fileInput.click()" class="cursor-pointer block py-20 px-8 text-center">
+    <div class="block py-16 px-8 text-center">
       <div
-        class="w-20 h-20 bg-[#13131f] rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 shadow-xl shadow-black/50 group-hover:scale-110 transition-transform duration-300 relative overflow-hidden"
+        (click)="fileInput.click()"
+        class="cursor-pointer w-20 h-20 bg-[#13131f] rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 shadow-xl shadow-black/50 group-hover:scale-110 transition-transform duration-300 relative overflow-hidden"
       >
         <div
           class="absolute inset-0 bg-[#bc13fe] opacity-0 group-hover:opacity-10 transition-opacity"
         ></div>
-        <i class="fa-solid fa-camera text-3xl text-[#bc13fe]"></i>
+        <i class="fa-solid fa-cloud-arrow-up text-3xl text-[#bc13fe]"></i>
       </div>
 
       <h2 class="text-xl font-bold text-white mb-2">Subir Foto</h2>
-      <p class="text-slate-400 text-sm font-medium">Arrastra, selecciona o toma una foto</p>
-    </label>
+      <p class="text-slate-400 text-sm font-medium mb-8">Arrastra o selecciona de la galería</p>
+
+      <div class="flex justify-center gap-3">
+        <button
+          (click)="fileInput.click()"
+          class="px-4 cursor-pointer py-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 text-xs font-bold hover:bg-white/10 hover:text-white transition-all"
+        >
+          <i class="fa-regular fa-image mr-2"></i> Galería
+        </button>
+        <button
+          (click)="cameraInput.click()"
+          class="px-4 cursor-pointer py-2 rounded-lg bg-[#bc13fe]/20 border border-[#bc13fe]/50 text-[#bc13fe] text-xs font-bold hover:bg-[#bc13fe] hover:text-white transition-all shadow-[0_0_15px_rgba(188,19,254,0.2)]"
+        >
+          <i class="fa-solid fa-camera mr-2"></i> Cámara
+        </button>
+      </div>
+    </div>
   </div>
 </section>

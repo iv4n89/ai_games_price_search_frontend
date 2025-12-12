@@ -40,5 +40,7 @@
   </app-verify>
   } @if (step === 'result' && resultData) {
   <app-result [result]="resultData" [requestData]="formData" (reset)="reset()"> </app-result>
+  } @if (step === 'error' && errorMessage) {
+  <app-error [message]="errorMessage" (retry)="reset()"> </app-error>
   }
 </main>

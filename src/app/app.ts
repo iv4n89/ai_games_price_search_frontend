@@ -1,6 +1,11 @@
 import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GameService, AppraisalResponse, AppraisalRequest, GameCandidate } from './gamescanner.service';
+import {
+  GameService,
+  AppraisalResponse,
+  AppraisalRequest,
+  GameCandidate,
+} from './gamescanner.service';
 import { ParticleBgComponent } from './components/particle-background/particles.component';
 
 // Importamos los nuevos componentes hijos
@@ -9,6 +14,7 @@ import { ScanningComponent } from './components/scanning/scanning.component';
 import { SelectionComponent } from './components/selection/selection.component';
 import { VerifyComponent } from './components/verify/verify.component';
 import { ResultComponent } from './components/result/result.component';
+import { ErrorComponent } from './components/error/error.component';
 
 type AppStep = 'upload' | 'scanning' | 'selection' | 'verify' | 'result' | 'error';
 
@@ -16,30 +22,32 @@ type AppStep = 'upload' | 'scanning' | 'selection' | 'verify' | 'result' | 'erro
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     ParticleBgComponent,
     UploadComponent,
     ScanningComponent,
     SelectionComponent,
     VerifyComponent,
-    ResultComponent
+    ResultComponent,
+    ErrorComponent,
   ],
   templateUrl: './app.html',
-  styleUrls: ['./app.css']
+  styleUrls: ['./app.css'],
 })
 export class App {
   step: AppStep = 'upload';
   scanningMessage = 'INICIANDO SENSORES...';
   previewImage: string | null = null;
   isLoading = false;
+  errorMessage = '';
 
   candidates: GameCandidate[] = [];
-  
+
   formData: AppraisalRequest = {
     title: '',
     platform: '',
     region: 'PAL ESP',
-    condition: 'CIB'
+    condition: 'CIB',
   };
 
   resultData: AppraisalResponse | null = null;
@@ -63,7 +71,7 @@ export class App {
 
       this.step = 'scanning';
       this.scanningMessage = 'IDENTIFICANDO JUEGO...';
-      
+
       this.gameService.identifyGame(file).subscribe({
         next: (res) => {
           this.ngZone.run(() => {
@@ -75,20 +83,21 @@ export class App {
               this.populateForm(res.data);
               this.step = 'verify';
             } else {
-              alert('No se detectó ningún juego claro. Intenta otra foto.');
-              this.step = 'upload';
+              this.errorMessage =
+                'No se ha detectado ningún videojuego claro. Intenta centrar la carátula o el disco.';
+              this.step = 'error';
             }
             this.cdr.detectChanges();
           });
         },
         error: (err) => {
           this.ngZone.run(() => {
-            console.error('API Error:', err);
-            this.step = 'upload';
-            alert('Error conectando con la IA');
+            this.errorMessage = 'Hubo un problema consultando los precios de mercado.';
+            this.step = 'error';
+            this.isLoading = false;
             this.cdr.detectChanges();
           });
-        }
+        },
       });
     }
   }
@@ -124,7 +133,7 @@ export class App {
           this.isLoading = false;
           this.cdr.detectChanges();
         });
-      }
+      },
     });
   }
 
