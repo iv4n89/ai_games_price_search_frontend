@@ -15,7 +15,7 @@
     @for (candidate of candidates; track candidate) {
       <button
         (click)="onSelect(candidate)"
-        class="w-full text-left p-4 rounded-xl bg-white/5 hover:bg-[#bc13fe]/20 border border-white/10 hover:border-[#bc13fe] transition-all flex justify-between items-center group"
+        class="w-full cursor-pointer text-left p-4 rounded-xl bg-white/5 hover:bg-[#bc13fe]/20 border border-white/10 hover:border-[#bc13fe] transition-all flex justify-between items-center group"
       >
         <div class="flex flex-col">
           <span class="font-bold text-white text-sm group-hover:text-[#bc13fe] transition-colors">{{
