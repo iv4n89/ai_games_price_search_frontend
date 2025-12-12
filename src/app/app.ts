@@ -1,38 +1,9 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { GameService, IdentificationResponse, AppraisalResponse, AppraisalRequest, GameCandidate } from './gamescanner.service';
+import { AppraisalRequest, AppraisalResponse, GameCandidate, GameService } from './gamescanner.service';
 
 type AppStep = 'upload' | 'scanning' | 'selection' | 'verify' | 'result' | 'error';
-
-class Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  size: number;
-  alpha: number;
-  color: string;
-
-  constructor(width: number, height: number) {
-    this.x = Math.random() * width;
-    this.y = Math.random() * height;
-    this.vx = (Math.random() - 0.5) * 0.2; 
-    this.vy = (Math.random() - 0.5) * 0.2;
-    this.size = Math.random() * 1.5 + 0.5;
-    this.alpha = Math.random() * 0.3 + 0.1;
-    this.color = Math.random() > 0.8 ? '188, 19, 254' : '255, 255, 255';
-  }
-
-  update(width: number, height: number) {
-    this.x += this.vx;
-    this.y += this.vy;
-    if (this.x < 0) this.x = width;
-    if (this.x > width) this.x = 0;
-    if (this.y < 0) this.y = height;
-    if (this.y > height) this.y = 0;
-  }
-}
 
 @Component({
   selector: 'app-root',
@@ -41,8 +12,13 @@ class Particle {
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-export class App implements AfterViewInit, OnDestroy {
+export class App implements AfterViewInit {
   @ViewChild('bgCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+  
+  private gameService = inject(GameService);
+  private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
+
   private ctx!: CanvasRenderingContext2D;
   private animationFrameId!: number;
   private particles: Particle[] = [];
@@ -52,7 +28,6 @@ export class App implements AfterViewInit, OnDestroy {
   previewImage: string | null = null;
   isLoading = false;
 
-  // Actualizado: Array de objetos GameCandidate
   candidates: GameCandidate[] = [];
   
   formData: AppraisalRequest = {
@@ -64,17 +39,18 @@ export class App implements AfterViewInit, OnDestroy {
 
   resultData: AppraisalResponse | null = null;
 
-  constructor(private gameService: GameService, private cdr: ChangeDetectorRef) {}
-
   ngAfterViewInit() {
     this.initParticles();
-    window.addEventListener('resize', () => this.resizeCanvas());
-  }
+    
+    const resizeHandler = () => this.resizeCanvas();
+    window.addEventListener('resize', resizeHandler);
 
-  ngOnDestroy() {
-    if (this.animationFrameId) {
-      cancelAnimationFrame(this.animationFrameId);
-    }
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('resize', resizeHandler);
+      if (this.animationFrameId) {
+        cancelAnimationFrame(this.animationFrameId);
+      }
+    });
   }
 
   initParticles() {
@@ -102,10 +78,12 @@ export class App implements AfterViewInit, OnDestroy {
     this.animationFrameId = requestAnimationFrame(() => this.animate());
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
       const reader = new FileReader();
+      
       reader.onload = (e) => {
         this.previewImage = e.target?.result as string;
         this.cdr.detectChanges();
@@ -119,20 +97,16 @@ export class App implements AfterViewInit, OnDestroy {
         next: (res) => {
           console.log('Respuesta recibida:', res);
           if (res.multiple_detected && res.candidates.length > 0) {
-            console.log('Múltiples detectados');
             this.candidates = res.candidates;
             this.step = 'selection';
-            this.cdr.detectChanges();
           } else if (res.found) {
-            console.log('Juego encontrado');
             this.populateForm(res.data);
             this.step = 'verify';
-            this.cdr.detectChanges();
           } else {
             alert('No se detectó ningún juego claro. Intenta otra foto.');
             this.step = 'upload';
-            this.cdr.detectChanges();
           }
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error(err);
@@ -180,5 +154,34 @@ export class App implements AfterViewInit, OnDestroy {
     this.previewImage = null;
     this.resultData = null;
     this.formData = { title: '', platform: '', region: 'PAL ESP', condition: 'CIB' };
+  }
+}
+
+class Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  alpha: number;
+  color: string;
+
+  constructor(width: number, height: number) {
+    this.x = Math.random() * width;
+    this.y = Math.random() * height;
+    this.vx = (Math.random() - 0.5) * 0.2; 
+    this.vy = (Math.random() - 0.5) * 0.2;
+    this.size = Math.random() * 1.5 + 0.5;
+    this.alpha = Math.random() * 0.3 + 0.1;
+    this.color = Math.random() > 0.8 ? '188, 19, 254' : '255, 255, 255';
+  }
+
+  update(width: number, height: number) {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0) this.x = width;
+    if (this.x > width) this.x = 0;
+    if (this.y < 0) this.y = height;
+    if (this.y > height) this.y = 0;
   }
 }

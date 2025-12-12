@@ -1,26 +1,23 @@
-<!-- CAPA 1: Canvas de Partículas (Fondo Animado) -->
+<!-- LAYER 1: Particle Canvas (Animated Background) -->
 <canvas #bgCanvas class="fixed inset-0 w-full h-full pointer-events-none -z-10 bg-[#050505]"></canvas>
 
-<!-- CAPA 2: Viñeta (Oscurecimiento de bordes) -->
+<!-- LAYER 2: Vignette (Edge Darkening) -->
 <div class="fixed inset-0 pointer-events-none -z-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0)_50%,rgba(0,0,0,0.8)_100%)]"></div>
 
-<!-- CAPA 3: Contenido Principal -->
+<!-- LAYER 3: Main Content -->
 <main class="min-h-screen flex flex-col items-center justify-center p-4 font-sans text-slate-200 relative overflow-hidden z-10">
 
   <!-- HEADER -->
   <header class="text-center mb-10 animate-fade-in relative z-20">
-    <!-- Icono Fantasma -->
     <div class="inline-flex items-center justify-center mb-4 relative">
       <div class="absolute inset-0 bg-[#bc13fe] blur-2xl opacity-30 rounded-full transform scale-150"></div>
       <i class="fa-solid fa-ghost text-5xl text-white relative z-10 drop-shadow-lg"></i>
     </div>
     
-    <!-- Título Principal -->
     <h1 class="text-4xl font-black text-white tracking-tight text-shadow-neon mb-3">
       RETRO<span class="text-[#bc13fe]">SCAN</span> AI
     </h1>
     
-    <!-- Subtítulo Técnico -->
     <div class="flex justify-center items-center gap-3 opacity-60">
         <div class="h-[1px] w-8 bg-gradient-to-r from-transparent to-white/50"></div>
         <p class="text-[10px] font-mono uppercase tracking-[0.3em] text-slate-300">Tasación Inteligente</p>
@@ -29,14 +26,13 @@
   </header>
 
   <!-- VIEW 1: UPLOAD -->
-  <section *ngIf="step === 'upload'" class="hud-panel w-full max-w-lg p-1 animate-fade-in group">
+  @if (step === 'upload') {
+  <section class="hud-panel w-full max-w-lg p-1 animate-fade-in group">
     <input type="file" #fileInput (change)="onFileSelected($event)" class="hidden" accept="image/*">
     
-    <!-- Zona de Drop con borde discontinuo -->
     <div class="relative bg-[#0a0a12]/50 m-1 rounded-xl border-2 border-dashed border-white/10 hover:border-[#bc13fe]/50 hover:bg-[#bc13fe]/5 transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(188,19,254,0.1)]">
         <label (click)="fileInput.click()" class="cursor-pointer block py-20 px-8 text-center">
           
-          <!-- Icono Cámara con Glow -->
           <div class="w-20 h-20 bg-[#13131f] rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10 shadow-xl shadow-black/50 group-hover:scale-110 transition-transform duration-300 relative overflow-hidden">
             <div class="absolute inset-0 bg-[#bc13fe] opacity-0 group-hover:opacity-10 transition-opacity"></div>
             <i class="fa-solid fa-camera text-3xl text-[#bc13fe]"></i>
@@ -47,32 +43,33 @@
         </label>
     </div>
   </section>
+  }
 
   <!-- VIEW 2: SCANNING (Loading) -->
-  <section *ngIf="step === 'scanning'" class="hud-panel w-full max-w-lg p-1 animate-fade-in">
+  @if (step === 'scanning') {
+  <section class="hud-panel w-full max-w-lg p-1 animate-fade-in">
     <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-white/10">
       <img [src]="previewImage" *ngIf="previewImage" class="w-full h-full object-cover opacity-60">
       
-      <!-- Efecto Láser -->
       <div class="absolute inset-0 w-full h-[2px] bg-[#00f3ff] shadow-[0_0_25px_#00f3ff] animate-scan-line z-20"></div>
       
-      <!-- Overlay Info -->
       <div class="absolute inset-0 flex flex-col items-center justify-center z-30">
           <div class="bg-black/80 backdrop-blur px-5 py-2 rounded-full border border-[#00f3ff]/30 text-[#00f3ff] text-xs font-mono tracking-widest animate-pulse shadow-[0_0_15px_rgba(0,243,255,0.2)]">
             <i class="fa-solid fa-microchip mr-2"></i> {{ scanningMessage }}
           </div>
       </div>
       
-      <!-- Esquinas Decorativas HUD -->
       <div class="absolute top-4 left-4 w-4 h-4 border-l-2 border-t-2 border-white/20"></div>
       <div class="absolute top-4 right-4 w-4 h-4 border-r-2 border-t-2 border-white/20"></div>
       <div class="absolute bottom-4 left-4 w-4 h-4 border-l-2 border-b-2 border-white/20"></div>
       <div class="absolute bottom-4 right-4 w-4 h-4 border-r-2 border-b-2 border-white/20"></div>
     </div>
   </section>
+  }
 
   <!-- VIEW 3: SELECTION (Multiple Games) -->
-  <section *ngIf="step === 'selection'" class="hud-panel w-full max-w-lg p-6 border-t-2 border-yellow-500/50 animate-fade-in">
+  @if (step === 'selection') {
+  <section class="hud-panel w-full max-w-lg p-6 border-t-2 border-yellow-500/50 animate-fade-in">
     <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-3">
       <div class="w-8 h-8 rounded bg-yellow-500/20 flex items-center justify-center text-yellow-500 border border-yellow-500/30">
          <i class="fa-solid fa-layer-group text-sm"></i>
@@ -82,9 +79,8 @@
     <p class="text-xs text-slate-400 mb-6 ml-1">La IA ha detectado varios títulos. Selecciona cuál quieres tasar.</p>
     
     <div class="space-y-3">
-      <!-- ACTUALIZADO: Lista de candidatos con detalles -->
-      <button *ngFor="let candidate of candidates" 
-              (click)="selectCandidate(candidate)"
+      @for (candidate of candidates; track candidate) {
+      <button (click)="selectCandidate(candidate)"
               class="w-full text-left p-4 rounded-xl bg-white/5 hover:bg-[#bc13fe]/20 border border-white/10 hover:border-[#bc13fe] transition-all flex justify-between items-center group">
         <div class="flex flex-col">
             <span class="font-bold text-white text-sm group-hover:text-[#bc13fe] transition-colors">{{ candidate.title }}</span>
@@ -95,12 +91,15 @@
         </div>
         <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-[#bc13fe] transition-colors"></i>
       </button>
+      }
     </div>
     <button (click)="reset()" class="w-full mt-6 py-3 text-xs font-bold text-slate-500 hover:text-white transition-colors uppercase tracking-wide">Cancelar Operación</button>
   </section>
+  }
 
-  <!-- VIEW 4: VERIFY (Formulario) -->
-  <section *ngIf="step === 'verify'" class="hud-panel w-full max-w-lg p-8 border-t-2 border-[#bc13fe]/50 animate-fade-in">
+  <!-- VIEW 4: VERIFY (Form) -->
+  @if (step === 'verify') {
+  <section class="hud-panel w-full max-w-lg p-8 border-t-2 border-[#bc13fe]/50 animate-fade-in">
     <div class="flex items-center justify-between mb-8">
       <h2 class="text-lg font-bold text-white flex items-center gap-3">
         <span class="w-8 h-8 rounded bg-[#bc13fe]/20 flex items-center justify-center text-[#bc13fe] border border-[#bc13fe]/30">
@@ -112,7 +111,6 @@
     </div>
 
     <div class="space-y-6">
-      <!-- Titulo -->
       <div>
         <label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2 block font-mono">Título del Juego</label>
         <div class="relative group">
@@ -122,12 +120,10 @@
       </div>
 
       <div class="grid grid-cols-2 gap-4">
-          <!-- Plataforma -->
           <div>
             <label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2 block font-mono">Plataforma</label>
             <input [(ngModel)]="formData.platform" type="text" class="w-full p-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm font-semibold focus:border-[#bc13fe] focus:outline-none transition-all">
           </div>
-          <!-- Condicion -->
           <div>
             <label class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-2 block font-mono">Condición</label>
             <div class="relative">
@@ -141,14 +137,13 @@
           </div>
       </div>
 
-      <!-- Region Selector (CRITICO) -->
+      <!-- Region Selector (CRITICAL) -->
       <div class="pt-4 border-t border-white/5">
         <label class="text-[10px] text-yellow-500 uppercase font-bold tracking-widest mb-3 block font-mono flex justify-between">
             Región / Edición 
             <span class="text-[9px] font-normal normal-case opacity-70"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Vital para el precio</span>
         </label>
         <div class="grid grid-cols-2 gap-3">
-          <!-- PAL ESP -->
           <div (click)="formData.region = 'PAL ESP'" 
                 [class.ring-1]="formData.region === 'PAL ESP'"
                 [class.ring-[#bc13fe]]="formData.region === 'PAL ESP'"
@@ -168,7 +163,6 @@
               <i *ngIf="formData.region === 'PAL ESP'" class="fa-solid fa-circle-check absolute right-2 top-2 text-[#bc13fe] text-xs"></i>
           </div>
           
-          <!-- PAL EUR -->
           <div (click)="formData.region = 'PAL EUR'" 
                 [class.ring-1]="formData.region === 'PAL EUR'"
                 [class.ring-[#bc13fe]]="formData.region === 'PAL EUR'"
@@ -188,7 +182,6 @@
               <i *ngIf="formData.region === 'PAL EUR'" class="fa-solid fa-circle-check absolute right-2 top-2 text-[#bc13fe] text-xs"></i>
           </div>
 
-          <!-- NTSC U -->
           <div (click)="formData.region = 'NTSC U'" 
                 [class.ring-1]="formData.region === 'NTSC U'"
                 [class.ring-[#bc13fe]]="formData.region === 'NTSC U'"
@@ -208,7 +201,6 @@
               <i *ngIf="formData.region === 'NTSC U'" class="fa-solid fa-circle-check absolute right-2 top-2 text-[#bc13fe] text-xs"></i>
           </div>
           
-          <!-- NTSC J -->
            <div (click)="formData.region = 'NTSC J'" 
                 [class.ring-1]="formData.region === 'NTSC J'"
                 [class.ring-[#bc13fe]]="formData.region === 'NTSC J'"
@@ -237,14 +229,14 @@
             <span *ngIf="!isLoading">CONFIRMAR Y TASAR</span>
             <i *ngIf="!isLoading" class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
         </span>
-        <!-- Brillo al hacer hover -->
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1s_infinite]"></div>
     </button>
   </section>
+  }
 
   <!-- VIEW 5: RESULT -->
-  <section *ngIf="step === 'result' && resultData" class="hud-panel w-full max-w-lg p-0 overflow-hidden relative animate-fade-in">
-      <!-- Glow Bg -->
+  @if (step === 'result' && resultData) {
+  <section class="hud-panel w-full max-w-lg p-0 overflow-hidden relative animate-fade-in">
       <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-[#bc13fe]/10 blur-[60px] pointer-events-none"></div>
 
       <div class="p-8 relative z-10">
@@ -263,7 +255,6 @@
                 {{ resultData.price_median | number:'1.2-2' }}€
             </span>
             
-            <!-- NUEVO: CHIP DE TENDENCIA -->
             <div *ngIf="resultData.trend" class="mt-4 flex justify-center">
                 <span [ngClass]="{
                     'bg-emerald-500/10 text-emerald-400 border-emerald-500/30': resultData.trend === 'stable' || resultData.trend === 'going_up',
@@ -313,4 +304,5 @@
         </div>
       </div>
   </section>
+  }
 </main>
