@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://resilient-frangollo-b7f6a0.netlify.app/api'
+  apiUrl: 'https://ai-games-price-search-backend.onrender.com/api'
 };
