@@ -38,6 +38,8 @@
   } @if (step === 'verify') {
   <app-verify [formData]="formData" [isLoading]="isLoading" (submitForm)="submitForAppraisal()">
   </app-verify>
+  } @if (step === 'calculating') {
+  <app-calculating ></app-calculating>
   } @if (step === 'result' && resultData) {
   <app-result [result]="resultData" [requestData]="formData" (reset)="reset()"> </app-result>
   } @if (step === 'error' && errorMessage) {

@@ -1,0 +1,42 @@
+<section
+  class="hud-panel w-full max-w-lg p-10 border-t-2 border-[#bc13fe]/50 animate-fade-in text-center relative overflow-hidden"
+>
+  <div
+    class="absolute inset-0 bg-[linear-gradient(rgba(188,19,254,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(188,19,254,0.03)_1px,transparent_1px)] bg-size-[20px_20px] animate-pan"
+  ></div>
+
+  <div class="relative z-10 py-8">
+    <div class="relative w-24 h-24 mx-auto mb-8">
+      <div
+        class="absolute inset-0 border-4 border-t-[#bc13fe] border-r-transparent border-b-[#bc13fe] border-l-transparent rounded-full animate-spin-slow"
+      ></div>
+      <div
+        class="absolute inset-2 border-2 border-t-transparent border-r-[#00f3ff] border-b-transparent border-l-[#00f3ff] rounded-full animate-spin-reverse"
+      ></div>
+
+      <div class="absolute inset-0 flex items-center justify-center animate-pulse">
+        <i
+          class="fa-solid fa-brain text-3xl text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+        ></i>
+      </div>
+    </div>
+
+    <h2 class="text-xl font-bold text-white mb-2 tracking-widest uppercase font-mono">
+      Analizando Mercado
+    </h2>
+
+    <div class="h-6 overflow-hidden relative">
+      <p
+        class="text-xs text-[#00f3ff] font-mono animate-typewriter whitespace-nowrap overflow-hidden w-full text-center"
+      >
+        > {{ currentMessage }}
+      </p>
+    </div>
+
+    <div class="mt-8 w-full h-1 bg-white/10 rounded-full overflow-hidden">
+      <div
+        class="h-full bg-linear-to-r from-[#bc13fe] to-[#00f3ff] w-1/2 animate-loading-bar rounded-full"
+      ></div>
+    </div>
+  </div>
+</section>

@@ -15,8 +15,9 @@ import { SelectionComponent } from './components/selection/selection.component';
 import { VerifyComponent } from './components/verify/verify.component';
 import { ResultComponent } from './components/result/result.component';
 import { ErrorComponent } from './components/error/error.component';
+import { CalculatingComponent } from './components/calculating/calculating.component';
 
-type AppStep = 'upload' | 'scanning' | 'selection' | 'verify' | 'result' | 'error';
+type AppStep = 'upload' | 'scanning' | 'selection' | 'verify' | 'calculating' | 'result' | 'error';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ type AppStep = 'upload' | 'scanning' | 'selection' | 'verify' | 'result' | 'erro
     ScanningComponent,
     SelectionComponent,
     VerifyComponent,
+    CalculatingComponent,
     ResultComponent,
     ErrorComponent,
   ],
@@ -117,6 +119,7 @@ export class App {
   }
 
   submitForAppraisal() {
+    this.step = 'calculating';
     this.isLoading = true;
     this.gameService.getAppraisal(this.formData).subscribe({
       next: (res) => {

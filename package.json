@@ -3,8 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "config:dev": "node scripts/set-env.js --environment=development",
+    "config:prod": "node scripts/set-env.js --environment=production",
+    "start": "npm run config:dev && ng serve",
+    "build": "npm run config:prod && ng build",
+    "build:dev": "npm run config:dev && ng build --configuration development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -37,10 +40,12 @@
     "@angular/cli": "^21.0.3",
     "@angular/compiler-cli": "^21.0.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "dotenv": "^17.2.3",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.8",
+    "yargs": "^18.0.0"
   }
 }
