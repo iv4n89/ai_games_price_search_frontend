@@ -3,7 +3,7 @@ const { writeFile } = require('fs');
 // Cargar variables de entorno desde archivo .env si existe
 require('dotenv').config();
 
-const apiUrl = process.env.API_URL || 'http://localhost:3000/api';
+const apiUrl = process.env.API_URL || 'https://ai-games-price-search-backend.vercel.app/api';
 
 // Parsear argumentos de la línea de comandos manualmente
 const args = process.argv.slice(2);
